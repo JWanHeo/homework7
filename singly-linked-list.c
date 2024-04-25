@@ -43,6 +43,8 @@ int main()
 	int key;
 	headNode* headnode=NULL;
 
+	printf("[----- 허제완 2020069031 -----]");
+
 	do{
 		printf("----------------------------------------------------------------\n");
 		printf("                     Singly Linked List                         \n");
@@ -167,8 +169,8 @@ int insertNode(headNode* h, int key) {
 
 	/*첫번째 노드의 key가 입력받은 key보다 큰 경우*/
 	if(curr->key >= key) {
-		node->link = curr; // 첫번째 노드의 
-		h->first = node;	
+		node->link = curr; // 생성한 노드의 link를 첫번째 노드로 지정
+		h->first = node; // 첫번째 노드로 생성한 노드를 지정
 		return 0;
 	}
 	
@@ -199,12 +201,11 @@ int insertLast(headNode* h, int key) {
 		curr = curr->link; // 현재 노드는 다음 노드로 변경
 	}
 	
-	listNode* node = (listNode*)malloc(sizeof(listNode)); 
-	node->key = key;
-	node->link = NULL;
+	listNode* node = (listNode*)malloc(sizeof(listNode)); // 노드 생성
+	node->key = key; // 노드의 키값 초기화
+	node->link = NULL; // link를 NULL로 초기화
 	
-	curr->link = node;
-
+	curr->link = node; // 마지막 노드의 link가 생성한 node를 가리키도록 변경
 
 	return 0;
 }
@@ -217,7 +218,8 @@ int deleteFirst(headNode* h) {
 
 	listNode* firstNode = h->first; // firstNode가 첫번째 노드를 가리키도록 초기화
 
-	if(firstNode == NULL) { // 연결리스트가 비어있는 경우
+  /*연결리스트가 비어있는 경우*/
+	if(firstNode == NULL) {
 		printf("리스트가 비어있습니다.");
 		return 0;
 	}
@@ -271,14 +273,16 @@ int deleteLast(headNode* h) {
 
 	listNode* curr = h->first; // 현재 노드를 가리키는 포인터
 
+  /*리스트가 비어있는 경우*/
 	if(curr == NULL) {
 		printf("리스트가 비어있습니다.");
 		return 0;
 	}
 
+	/*리스트의 요소가 하나만 있는 경우*/
 	if(curr->link == NULL) {
-		h->first = NULL;
-		free(curr);
+		h->first = NULL; // 헤드 포인터를 NULL 포인터로 변경
+		free(curr); // 헤드포인터가 가리키던 노드 삭제
 		return 0;
 	}
 
@@ -297,6 +301,19 @@ int deleteLast(headNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(headNode* h) {
+
+	listNode* curr = h->first; // 현재 노드
+	listNode* prev = NULL; // 이전 노드
+	listNode* next = NULL; // 다음 노드
+
+	while(curr != NULL) { // 현재 노드가 NULL일 때까지 반복
+		next = curr->link; // next에 다음 노드 저장
+		curr->link = prev; // 현재 노드의 다음 노드를 이전 노드로 설정
+		prev = curr; // 이전 노드를 현재 노드로 이동
+		curr = next; // 현재 노드를 기존의 다음 노드로 이동
+	}
+
+	h->first = prev; // 헤더 노드를 기존의 마지막 노드로 변경 
 
 	return 0;
 }
