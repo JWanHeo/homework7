@@ -215,6 +215,15 @@ int insertLast(headNode* h, int key) {
  */
 int deleteFirst(headNode* h) {
 
+	listNode* firstNode = h->first; // firstNode가 첫번째 노드를 가리키도록 초기화
+
+	if(firstNode == NULL) { // 연결리스트가 비어있는 경우
+		printf("리스트가 비어있습니다.");
+		return 0;
+	}
+
+	h->first = h->first->link; // 헤드 포인터가 두번째 노드를 가리키도록 변경
+	free(firstNode); // 첫번째 노드 삭제(메모리 해제)
 
 	return 0;
 }
@@ -225,14 +234,60 @@ int deleteFirst(headNode* h) {
  */
 int deleteNode(headNode* h, int key) {
 
-	return 0;
+	listNode* curr = h->first; // 현재 노드를 가리키는 포인터
 
+	/*연결리스트가 비어있는 경우*/
+	if(curr == NULL) {
+		printf("리스트가 비어있습니다.");
+		return 0;
+	}
+
+	/*첫번째 노드의 key가 입력받은 key와 동일한 경우*/
+	if(curr->key == key) {
+		listNode* temp = curr; // 현재 노드를 가리키는 temp
+		h->first = curr->link; // 헤드 포인터가 다음 노드를 가리키도록 변경
+		curr = h->first; // 현재 노드를 다음 노드로 변경
+		free(temp);	// 기존의 현재 노드 삭제
+		return 0;
+	}
+
+	while(curr != NULL && curr->link != NULL) { // 리스트의 모든 노드 순회
+		if(curr->link->key == key) { // 다음 노드의 key가 입력받은 key와 같은 경우
+			listNode* temp = curr->link; // 다음 노드로 temp 초기화
+			curr->link = curr->link->link; // 현재 노드의 다음 노드를 다음 노드의 다음 노드로 변경 
+			free(temp); // 기존의 다음 노드 삭제
+			return 0;
+		}
+		curr = curr->link;
+	}
+
+	return 0;
 }
 
 /**
  * list의 마지막 노드 삭제
  */
 int deleteLast(headNode* h) {
+
+	listNode* curr = h->first; // 현재 노드를 가리키는 포인터
+
+	if(curr == NULL) {
+		printf("리스트가 비어있습니다.");
+		return 0;
+	}
+
+	if(curr->link == NULL) {
+		h->first = NULL;
+		free(curr);
+		return 0;
+	}
+
+	while(curr->link->link != NULL) { // 현재 노드의 다음 다음 노드가 없을 때까지 반복 수행
+		curr = curr->link; // 현재 노드는 다음 노드로 변경
+	}
+
+	free(curr->link); // 현재 노드의 다음 노드 삭제
+	curr->link = NULL; // 현재 노드의 link를 NULL로 초기화
 
 	return 0;
 }
