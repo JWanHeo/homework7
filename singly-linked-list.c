@@ -10,19 +10,19 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-/* í•„ìš”í•œ í—¤ë”íŒŒì¼ ì¶”ê°€ */
+/* ÇÊ¿äÇÑ Çì´õÆÄÀÏ Ãß°¡ */
 
-typedef struct Node {
+typedef struct Node { // intÇü µ¥ÀÌÅÍ key¿Í ´ÙÀ½ ¸®½ºÆ®¸¦ °¡¸®Å°´Â Æ÷ÀÎÅÍ link¸¦ ¿ä¼Ò·Î °¡Áö´Â listNode ±¸Á¶Ã¼ Á¤ÀÇ
 	int key;
 	struct Node* link;
 } listNode;
 
-typedef struct Head {
+typedef struct Head { // Ã¹¹øÂ° ³ëµå¸¦ °¡¸®Å°´Â Æ÷ÀÎÅÍ  first¸¦ ¿ä¼Ò·Î °¡Áö´Â headNode ±¸Á¶Ã¼ Á¤ÀÇ
 	struct Node* first;
-} headNode;
+} headNode; 
 
 
-/* í•¨ìˆ˜ ë¦¬ìŠ¤íŠ¸ */
+/* ÇÔ¼ö ¸®½ºÆ® */
 headNode* initialize(headNode* h);
 int freeList(headNode* h);
 
@@ -108,19 +108,19 @@ int main()
 
 headNode* initialize(headNode* h) {
 
-	/* headNodeê°€ NULLì´ ì•„ë‹ˆë©´, freeNodeë¥¼ í˜¸ì¶œí•˜ì—¬ í• ë‹¹ëœ ë©”ëª¨ë¦¬ ëª¨ë‘ í•´ì œ */
+	/* headNode°¡ NULLÀÌ ¾Æ´Ï¸é, freeNode¸¦ È£ÃâÇÏ¿© ÇÒ´çµÈ ¸Ş¸ğ¸® ¸ğµÎ ÇØÁ¦ */
 	if(h != NULL)
 		freeList(h);
 
-	/* headNodeì— ëŒ€í•œ ë©”ëª¨ë¦¬ë¥¼ í• ë‹¹í•˜ì—¬ ë¦¬í„´ */
+	/* headNode¿¡ ´ëÇÑ ¸Ş¸ğ¸®¸¦ ÇÒ´çÇÏ¿© ¸®ÅÏ */
 	headNode* temp = (headNode*)malloc(sizeof(headNode));
 	temp->first = NULL;
 	return temp;
 }
 
 int freeList(headNode* h){
-	/* hì™€ ì—°ê²°ëœ listNode ë©”ëª¨ë¦¬ í•´ì œ
-	 * headNodeë„ í•´ì œë˜ì–´ì•¼ í•¨.
+	/* h¿Í ¿¬°áµÈ listNode ¸Ş¸ğ¸® ÇØÁ¦
+	 * headNodeµµ ÇØÁ¦µÇ¾î¾ß ÇÔ.
 	 */
 	listNode* p = h->first;
 
@@ -137,11 +137,11 @@ int freeList(headNode* h){
 
 
 /**
- * list ì²˜ìŒì— keyì— ëŒ€í•œ ë…¸ë“œí•˜ë‚˜ë¥¼ ì¶”ê°€
+ * list Ã³À½¿¡ key¿¡ ´ëÇÑ ³ëµåÇÏ³ª¸¦ Ãß°¡
  */
 int insertFirst(headNode* h, int key) {
 
-	listNode* node = (listNode*)malloc(sizeof(listNode));
+	listNode* node = (listNode*)malloc(sizeof(listNode)); 
 	node->key = key;
 
 	node->link = h->first;
@@ -151,23 +151,67 @@ int insertFirst(headNode* h, int key) {
 }
 
 
-/* ë¦¬ìŠ¤íŠ¸ë¥¼ ê²€ìƒ‰í•˜ì—¬, ì…ë ¥ë°›ì€ keyë³´ë‹¤ í°ê°’ì´ ë‚˜ì˜¤ëŠ” ë…¸ë“œ ë°”ë¡œ ì•ì— ì‚½ì… */
+/* ¸®½ºÆ®¸¦ °Ë»öÇÏ¿©, ÀÔ·Â¹ŞÀº keyº¸´Ù Å«°ªÀÌ ³ª¿À´Â ³ëµå ¹Ù·Î ¾Õ¿¡ »ğÀÔ */
 int insertNode(headNode* h, int key) {
+
+	listNode* curr = h->first; // ÇöÀç ³ëµå¸¦ °¡¸®Å°´Â Æ÷ÀÎÅÍ
+
+	/*¿¬°á¸®½ºÆ®°¡ ºñ¾îÀÖ´Â °æ¿ì*/
+	if(curr == NULL) { // ¿¬°á¸®½ºÆ®°¡ ºñ¾îÀÖ´Â °æ¿ì
+		insertFirst(h, key); // Ã¹¹øÂ° ³ëµå »ı¼º
+		return 0;
+	}
+
+	listNode* node = (listNode*)malloc(sizeof(listNode)); // »õ·Î¿î ³ëµå »ı¼º
+	node->key = key; // »ı¼ºÇÑ ³ëµåÀÇ key¸¦ ÀÔ·Â¹ŞÀº key·Î ÃÊ±âÈ­
+
+	/*Ã¹¹øÂ° ³ëµåÀÇ key°¡ ÀÔ·Â¹ŞÀº keyº¸´Ù Å« °æ¿ì*/
+	if(curr->key >= key) {
+		node->link = curr; // Ã¹¹øÂ° ³ëµåÀÇ 
+		h->first = node;	
+		return 0;
+	}
+	
+	while(curr->link != NULL) { // ÇöÀç ³ëµåÀÇ ´ÙÀ½ ³ëµå°¡ ¾øÀ» ¶§±îÁö ¹İº¹ ¼öÇà
+		if(curr->link->key >= key) { // ¸¸¾à ´ÙÀ½ ³ëµåÀÇ key°¡ ÀÔ·Â¹ŞÀº keyº¸´Ù Å©¸é,
+			node->link = curr->link; // »ı¼ºÇÑ ³ëµåÀÇ link¸¦ currÀÇ ÁÖ¼Ò·Î ÃÊ±âÈ­
+			curr->link = node; // ÇöÀç ³ëµåÀÇ link¸¦ »ı¼ºÇÑ ³ëµå·Î º¯°æ
+			return 0; // ÇÔ¼ö Á¾·á
+		}
+		curr = curr->link; // ÇöÀç ³ëµå´Â ´ÙÀ½ ³ëµå·Î º¯°æ
+	}
+
+	/*¸¶Áö¸· ³ëµåÀÇ key°ª±îÁö È®ÀÎÇßÀ» ¶§ ÀÔ·Â¹ŞÀº keyº¸´Ù ÀÛÀº °æ¿ì*/
+	curr->link = node;
+	node->link = NULL;
 
 	return 0;
 }
 
 /**
- * listì— keyì— ëŒ€í•œ ë…¸ë“œí•˜ë‚˜ë¥¼ ì¶”ê°€
+ * list¿¡ key¿¡ ´ëÇÑ ³ëµåÇÏ³ª¸¦ Ãß°¡
  */
 int insertLast(headNode* h, int key) {
 
+	listNode* curr = h->first; // ÇöÀç ³ëµå¸¦ °¡¸®Å°´Â Æ÷ÀÎÅÍ
+
+	while(curr->link != NULL) { // ÇöÀç ³ëµåÀÇ ´ÙÀ½ ³ëµå°¡ ¾øÀ» ¶§±îÁö ¹İº¹ ¼öÇà
+		curr = curr->link; // ÇöÀç ³ëµå´Â ´ÙÀ½ ³ëµå·Î º¯°æ
+	}
+	
+	listNode* node = (listNode*)malloc(sizeof(listNode)); 
+	node->key = key;
+	node->link = NULL;
+	
+	curr->link = node;
+
+
 	return 0;
 }
 
 
 /**
- * listì˜ ì²«ë²ˆì§¸ ë…¸ë“œ ì‚­ì œ
+ * listÀÇ Ã¹¹øÂ° ³ëµå »èÁ¦
  */
 int deleteFirst(headNode* h) {
 
@@ -177,7 +221,7 @@ int deleteFirst(headNode* h) {
 
 
 /**
- * listì—ì„œ keyì— ëŒ€í•œ ë…¸ë“œ ì‚­ì œ
+ * list¿¡¼­ key¿¡ ´ëÇÑ ³ëµå »èÁ¦
  */
 int deleteNode(headNode* h, int key) {
 
@@ -186,7 +230,7 @@ int deleteNode(headNode* h, int key) {
 }
 
 /**
- * listì˜ ë§ˆì§€ë§‰ ë…¸ë“œ ì‚­ì œ
+ * listÀÇ ¸¶Áö¸· ³ëµå »èÁ¦
  */
 int deleteLast(headNode* h) {
 
@@ -195,7 +239,7 @@ int deleteLast(headNode* h) {
 
 
 /**
- * ë¦¬ìŠ¤íŠ¸ì˜ ë§í¬ë¥¼ ì—­ìˆœìœ¼ë¡œ ì¬ ë°°ì¹˜
+ * ¸®½ºÆ®ÀÇ ¸µÅ©¸¦ ¿ª¼øÀ¸·Î Àç ¹èÄ¡
  */
 int invertList(headNode* h) {
 
